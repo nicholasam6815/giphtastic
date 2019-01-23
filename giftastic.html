@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Baseball</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+        <div class="jumbotron" style="color:blue;">
+                <img src="8-surprising-fenway-park-eventss-featured-photo.jpg" width="100%">
+                <h1 style="text-align:center">Baseball Search</h1>
+                
+            </div>
+    
+
+            <form>
+                    <div class="form-group" style="text-align:center">
+                      <label for="teamInput">Add a Team!</label>
+                      <input type="text" id="teamInput">
+                      <input id="Submitbtn" type="submit" value="submit">
+                    </div>
+                  </form>
+
+    <button class="btn btn-primary" data-search="Yankees" id="show">NYY</button>
+    <button class="btn btn-primary" data-search="Mets" id="show">NYM</button>
+    <button class="btn btn-primary" data-search="Red Sox" id="show">BOS</button>
+    <div id="btn" style="display: inline-block"></div>
+    <div id="gifs-appear-here">
+        </div>
+
+
+
+<div class="row">
+  <div class="container">
+      <span><div id="giphy"></div></span>
+  </div> 
+</div> 
+    
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    
+    $("button").on("click", function() {
+
+        var topics = [];
+         function displayTeams() {
+        var b = $(this).data("search");
+        console.log(b);
+
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        b + "&api_key=eoy75G5L7wqMi6wEHh8tOTKbzWH14WA8&limit=10";
+
+        
+        $.ajax ({
+            url: queryURL,
+            method: "GET"
+        })
+        
+        .then(function(response) {
+          console.log(queryURL);
+
+          console.log(response);
+          
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+            var baseballDiv = $("<div>");
+            var p = $("<p>").text("Rating: " + results[i].rating);
+            var baseballImage = $("<img>");
+            
+            baseballImage.attr("src", results[i].images.fixed_height.url);
+            baseballDiv.append(p);
+            baseballDiv.append(baseballImage);
+            $("#gifs-appear-here").prepend(baseballDiv);
+          }
+        });
+    }
+        
+$("#Submitbtn").on("click", function(event) {
+      event.preventDefault();
+      var newShow = $("#teamInput").val().trim();
+      topics.push(newShow);
+      console.log(topics);
+      $("#teamInput").val(' ');
+      displayButtons();
+  });
+   
+      
+      $(document).on("click", "#show", displayTeams);
+        function displayButtons() {
+        $("#btn").empty();
+        for (var i = 0; i < topics.length; i++) {
+          var a = $('<button class="btn btn-primary">');
+          a.attr("id", "show");
+          a.attr("data-search", topics[i]);
+          a.text(topics[i]);
+          $("#btn").append(a);
+        }
+      }
+    
+      displayButtons();
+  
+
+});
+
+   
+
+    </script>
+</body>
+</html>
